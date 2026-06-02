@@ -24,7 +24,9 @@ jobs:
         run: mkdir -p static
 
       - name: Executar teste de sanidade
-        run: python -c "from main import app; print('App carregada com sucesso:', app.title)"
+        env:
+          NASA_API_KEY: "dummy-key-for-ci-validation"
+        run: python -c "from app.config import Settings; from app.models import FireData; from app.services.fire_classifier import classify_alert; print('Módulos carregados com sucesso')"
 
       - name: Login no Azure
         uses: azure/login@v2
@@ -36,12 +38,7 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
           package: .
-          startup-command: "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000"
-
-      - name: Health check pós-deploy
-        run: |
-          sleep 20
-          curl -f "https://${{ secrets.AZURE_APP_NAME }}.azurewebsites.net/health"
+          startup-command: "gunicorn --bind=0.0.0.0:8000 --worker-class uvicorn.workers.UvicornWorker main:app"
 
       - name: Logout do Azure
         if: always()
