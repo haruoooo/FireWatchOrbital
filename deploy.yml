@@ -1,0 +1,40 @@
+name: Deploy FireWatch Orbital → Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar teste de sanidade
+        run: python -c "from app.main import app; print('App carregada com sucesso')"
+
+      - name: Login no Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy no Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_APP_NAME }}
+          package: .
+          startup-command: "cd /home/site/wwwroot && pip install -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+      - name: Logout do Azure
+        if: always()
+        run: az logout

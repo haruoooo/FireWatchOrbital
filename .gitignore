@@ -1,0 +1,18 @@
+# Ambiente
+.env
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Azure (nunca comitar credenciais)
+local.settings.json
