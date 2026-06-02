@@ -1,14 +1,35 @@
 # Ambiente
 .env
+.env.local
+.env*.local
 venv/
 .venv/
+ENV/
+env/
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*$py.class
 *.egg-info/
 dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # Sistema
 .DS_Store

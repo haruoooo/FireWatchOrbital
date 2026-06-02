@@ -338,7 +338,7 @@
 </div>
 
 <script>
-const API = '';
+const API = window.location.origin;
 let map, markersLayer, chartBiome, chartDaily, chartStates;
 let allFires = [];
 
@@ -514,7 +514,7 @@ function updateHeader(stats, firesData) {
     ? `<span class="pulse"></span>NASA FIRMS · AO VIVO`
     : `Dados Sintéticos · MOCK`;
   const d = new Date(stats.updated_at + 'Z');
-  document.getElementById('last-updated').textContent = `atualizado ${d.toLocaleTimeString('pt-BR')}`;
+  document.getElementById('last-updated').textContent = `Atualizado ${d.toLocaleTimeString('pt-BR')}`;
 }
 
 function applyFilters() {
@@ -541,9 +541,18 @@ async function loadAll() {
     if (conf) firesUrl += `&confidence=${conf}`;
     if (minFrp > 0) firesUrl += `&min_frp=${minFrp}`;
 
+    const [firesHttp, statsHttp] = await Promise.all([
+      fetch(firesUrl),
+      fetch(`${API}/api/stats`),
+    ]);
+
+    if (!firesHttp.ok || !statsHttp.ok) {
+      throw new Error(`Falha HTTP: fires=${firesHttp.status}, stats=${statsHttp.status}`);
+    }
+
     const [firesRes, statsRes] = await Promise.all([
-      fetch(firesUrl).then(r => r.json()),
-      fetch(`${API}/api/stats`).then(r => r.json()),
+      firesHttp.json(),
+      statsHttp.json(),
     ]);
 
     allFires = firesRes.fires || [];
@@ -557,6 +566,7 @@ async function loadAll() {
 
   } catch(err) {
     console.error('Erro ao carregar dados:', err);
+    alert('Nao foi possivel carregar os dados agora. Tente novamente em instantes.');
   } finally {
     btn.disabled = false;
     btn.innerHTML = '↻ Atualizar Dados';
