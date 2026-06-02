@@ -511,8 +511,8 @@ function updateHeader(stats, firesData) {
   const isLive = stats.data_source === 'nasa_firms';
   sourceEl.className = 'source-badge' + (isLive ? ' live' : '');
   sourceEl.innerHTML = isLive
-    ? `<span class="pulse"></span>NASA FIRMS · Ao Vivo`
-    : `Dados Sintéticos · Demo`;
+    ? `<span class="pulse"></span>NASA FIRMS · AO VIVO`
+    : `Dados Sintéticos · MOCK`;
   const d = new Date(stats.updated_at + 'Z');
   document.getElementById('last-updated').textContent = `atualizado ${d.toLocaleTimeString('pt-BR')}`;
 }
