@@ -21,7 +21,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Executar teste de sanidade
-        run: python -c "from app.main import app; print('App carregada com sucesso')"
+        run: python -c "import main; print('App carregada com sucesso')"
 
       - name: Login no Azure
         uses: azure/login@v1
