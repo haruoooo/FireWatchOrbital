@@ -62,15 +62,16 @@
   #last-updated { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
 
   /* LAYOUT */
-  .main { display: grid; grid-template-columns: 280px 1fr; grid-template-rows: auto 1fr; height: calc(100vh - 60px); }
+  .main { display: grid; grid-template-columns: 280px 1fr; grid-template-rows: auto 1fr auto; height: calc(100vh - 60px); }
 
   /* SIDEBAR */
   aside {
-    grid-row: 1 / 3;
+    grid-row: 1 / 4;
     background: var(--surface); border-right: 1px solid var(--border);
     display: flex; flex-direction: column; overflow-y: auto;
     padding: 1.25rem 1rem;
     gap: 1.25rem;
+    height: 100%;
   }
   .section-label {
     font-size: 0.6rem; font-weight: 600; letter-spacing: .12em;
@@ -142,6 +143,8 @@
     background: #050709;
     min-height: 400px;
     height: 100%;
+    grid-column: 2;
+    grid-row: 2;
   }
   #map { width: 100%; height: 100%; min-height: 400px; }
   .map-overlay {
@@ -207,7 +210,7 @@
 
 <div class="loading-overlay" id="loading">
   <div class="loader-ring"></div>
-  <div class="loader-text">Conectando aos Satélites...</div>
+  <div class="loader-text">Conectando Aos Satélites...</div>
 </div>
 
 <header>
@@ -216,7 +219,7 @@
     Fire<span>Watch</span> Orbital
   </div>
   <div class="header-right">
-    <div class="source-badge" id="source-badge">Carregando...</div>
+    <div class="source-badge" id="source-badge">carregando...</div>
     <div id="last-updated">—</div>
   </div>
 </header>
@@ -282,9 +285,28 @@
       ↻ Atualizar Dados
     </button>
 
-    <div style="margin-top:auto">
-      <div class="section-label">Satélites Ativos</div>
-      <div id="sat-list" style="display:flex;flex-direction:column;gap:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)"></div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:.75rem">
+      <div>
+        <div class="section-label">Satélites Ativos</div>
+        <div id="sat-list" style="display:flex;flex-direction:column;gap:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)"></div>
+      </div>
+
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem">
+        <div class="section-label" style="margin-bottom:.5rem">Fonte de Dados</div>
+        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--muted);line-height:1.6">
+          <div>🛰️ <span style="color:var(--text)">NASA FIRMS</span></div>
+          <div>📡 VIIRS NOAA-20 NRT</div>
+          <div>🌎 Bounding Box Brasil</div>
+          <div>⏱️ Atualização ~3h</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:.85rem 1rem">
+        <div class="section-label" style="margin-bottom:.4rem;color:#4ade80">ODS 13 · Ação Climática</div>
+        <div style="font-size:.68rem;color:var(--muted);line-height:1.5">
+          Monitoramento orbital de queimadas contribui para redução de emissões de CO₂ e preservação dos biomas brasileiros.
+        </div>
+      </div>
     </div>
   </aside>
 
@@ -338,7 +360,7 @@
 </div>
 
 <script>
-const API = window.location.origin;
+const API = '';
 let map, markersLayer, chartBiome, chartDaily, chartStates;
 let allFires = [];
 
@@ -512,9 +534,13 @@ function updateHeader(stats, firesData) {
   sourceEl.className = 'source-badge' + (isLive ? ' live' : '');
   sourceEl.innerHTML = isLive
     ? `<span class="pulse"></span>NASA FIRMS · AO VIVO`
-    : `Dados Sintéticos · MOCK`;
-  const d = new Date(stats.updated_at + 'Z');
-  document.getElementById('last-updated').textContent = `Atualizado ${d.toLocaleTimeString('pt-BR')}`;
+    : `Dados Sintéticos · DEMO`;
+  const raw = stats.updated_at.replace('+00:00', 'Z').replace(/\+\d{2}:\d{2}$/, 'Z');
+  const d = new Date(raw);
+  const timeStr = isNaN(d.getTime())
+    ? stats.updated_at.slice(11, 19)
+    : d.toLocaleTimeString('pt-BR');
+  document.getElementById('last-updated').textContent = `Atualizado ${timeStr}`;
 }
 
 function applyFilters() {
@@ -530,7 +556,7 @@ function applyFilters() {
 async function loadAll() {
   const btn = document.getElementById('btn-refresh');
   btn.disabled = true;
-  btn.textContent = '↻ Carregando...';
+  btn.textContent = '↻ carregando...';
 
   const days = document.getElementById('filter-days').value;
   const conf = document.getElementById('filter-conf').value;
@@ -541,18 +567,9 @@ async function loadAll() {
     if (conf) firesUrl += `&confidence=${conf}`;
     if (minFrp > 0) firesUrl += `&min_frp=${minFrp}`;
 
-    const [firesHttp, statsHttp] = await Promise.all([
-      fetch(firesUrl),
-      fetch(`${API}/api/stats`),
-    ]);
-
-    if (!firesHttp.ok || !statsHttp.ok) {
-      throw new Error(`Falha HTTP: fires=${firesHttp.status}, stats=${statsHttp.status}`);
-    }
-
     const [firesRes, statsRes] = await Promise.all([
-      firesHttp.json(),
-      statsHttp.json(),
+      fetch(firesUrl).then(r => r.json()),
+      fetch(`${API}/api/stats`).then(r => r.json()),
     ]);
 
     allFires = firesRes.fires || [];
@@ -566,7 +583,6 @@ async function loadAll() {
 
   } catch(err) {
     console.error('Erro ao carregar dados:', err);
-    alert('Nao foi possivel carregar os dados agora. Tente novamente em instantes.');
   } finally {
     btn.disabled = false;
     btn.innerHTML = '↻ Atualizar Dados';
