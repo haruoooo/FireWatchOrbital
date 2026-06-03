@@ -29,7 +29,8 @@
     --font-mono: 'Space Mono', monospace;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-display); overflow-x: hidden; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-display); overflow-x: hidden; }
 
   /* HEADER */
   header {
@@ -39,150 +40,137 @@
     background: var(--surface);
     position: sticky; top: 0; z-index: 1000;
   }
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
-  }
-  .logo-icon {
-    width: 30px; height: 30px; background: var(--accent);
-    border-radius: 6px; display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+  .logo-icon { width: 30px; height: 30px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
   .logo span { color: var(--accent); }
   .header-right { display: flex; align-items: center; gap: 1.5rem; }
-  .source-badge {
-    font-family: var(--font-mono); font-size: 0.7rem;
-    padding: 4px 10px; border-radius: 100px;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-  }
+  .source-badge { font-family: var(--font-mono); font-size: 0.7rem; padding: 4px 10px; border-radius: 100px; border: 1px solid var(--border2); color: var(--muted); }
   .source-badge.live { border-color: var(--low); color: var(--low); }
   .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--low); margin-right: 6px; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
   #last-updated { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
 
-  /* LAYOUT */
-  .main { display: grid; grid-template-columns: 280px 1fr; grid-template-rows: auto 1fr auto; height: calc(100vh - 60px); }
+  /* TAB NAV */
+  .tab-nav {
+    display: flex; gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 60px; z-index: 999;
+  }
+  .tab-btn {
+    padding: .75rem 1.75rem; font-family: var(--font-display); font-size: .82rem; font-weight: 600;
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* SECTIONS */
+  .section { min-height: 100vh; scroll-margin-top: 108px; }
+
+  /* ── SECTION 1: IDENTIDADE ── */
+  .identity-hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    background: radial-gradient(ellipse at 60% 40%, rgba(255,77,28,.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(56,189,248,.05) 0%, transparent 50%),
+                var(--bg);
+  }
+  .identity-content {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 4rem 2rem; max-width: 900px; margin: 0 auto; text-align: center;
+  }
+  .identity-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: var(--font-mono); font-size: .7rem; color: var(--accent);
+    border: 1px solid rgba(255,77,28,.3); border-radius: 100px;
+    padding: .35rem .9rem; margin-bottom: 2rem;
+  }
+  .identity-title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+  .identity-title span { color: var(--accent); }
+  .identity-subtitle { font-size: 1.1rem; color: var(--muted); line-height: 1.7; max-width: 620px; margin-bottom: 3rem; }
+  .identity-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; width: 100%; max-width: 560px; margin-bottom: 3rem;
+  }
+  .identity-stat { background: var(--surface); padding: 1.25rem 1rem; }
+  .identity-stat-val { font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent); }
+  .identity-stat-label { font-size: .68rem; color: var(--muted); margin-top: .25rem; }
+
+  .team-section { width: 100%; max-width: 780px; }
+  .team-title { font-size: .6rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; }
+  .team-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: .9rem 1rem; display: flex; align-items: center; gap: .75rem;
+    transition: border-color .2s;
+  }
+  .team-card:hover { border-color: var(--border2); }
+  .team-avatar {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--surface2);
+    border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .team-name { font-size: .8rem; font-weight: 600; }
+  .team-rm { font-size: .68rem; font-family: var(--font-mono); color: var(--muted); }
+
+  /* ── SECTION 2: DASHBOARD ── */
+  .dashboard-section {
+    display: grid; grid-template-columns: 280px 1fr; grid-template-rows: auto 1fr auto;
+    height: 100vh;
+  }
 
   /* SIDEBAR */
   aside {
     grid-row: 1 / 4;
     background: var(--surface); border-right: 1px solid var(--border);
     display: flex; flex-direction: column; overflow-y: auto;
-    padding: 1.25rem 1rem;
-    gap: 1.25rem;
-    height: 100%;
+    padding: 1.25rem 1rem; gap: 1.25rem; height: 100%;
   }
-  .section-label {
-    font-size: 0.6rem; font-weight: 600; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: .5rem;
-  }
-  .metric-card {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 10px; padding: .85rem 1rem;
-  }
-  .metric-value {
-    font-size: 1.9rem; font-weight: 800; line-height: 1;
-    font-family: var(--font-mono);
-  }
+  .section-label { font-size: 0.6rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+  .metric-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; }
+  .metric-value { font-size: 1.9rem; font-weight: 800; line-height: 1; font-family: var(--font-mono); }
   .metric-label { font-size: 0.72rem; color: var(--muted); margin-top: .3rem; }
   .metric-value.critical { color: var(--critical); }
   .metric-value.high { color: var(--high); }
   .metric-value.low { color: var(--low); }
-
   .alert-bar { margin-bottom: .6rem; }
-  .alert-bar-label {
-    display: flex; justify-content: space-between;
-    font-size: .72rem; margin-bottom: .3rem;
-  }
-  .alert-bar-track {
-    height: 5px; border-radius: 3px; background: var(--border);
-    overflow: hidden;
-  }
+  .alert-bar-label { display: flex; justify-content: space-between; font-size: .72rem; margin-bottom: .3rem; }
+  .alert-bar-track { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
   .alert-bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
-
   .filter-group { display: flex; flex-direction: column; gap: .5rem; }
   .filter-label { font-size: .72rem; color: var(--muted); }
-  select, input[type=range] {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border2);
-    color: var(--text); border-radius: 6px; padding: .4rem .6rem;
-    font-family: var(--font-mono); font-size: .75rem; cursor: pointer;
-    appearance: none;
-  }
+  select, input[type=range] { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text); border-radius: 6px; padding: .4rem .6rem; font-family: var(--font-mono); font-size: .75rem; cursor: pointer; appearance: none; }
   select:focus, input:focus { outline: none; border-color: var(--accent); }
-  .range-value {
-    font-family: var(--font-mono); font-size: .7rem; color: var(--accent);
-    text-align: right; margin-top: .2rem;
-  }
-
-  .btn-refresh {
-    width: 100%; padding: .6rem; border-radius: 8px;
-    background: var(--accent); border: none; color: #fff;
-    font-family: var(--font-display); font-weight: 700; font-size: .82rem;
-    cursor: pointer; transition: opacity .2s;
-    display: flex; align-items: center; justify-content: center; gap: .5rem;
-  }
+  .btn-refresh { width: 100%; padding: .6rem; border-radius: 8px; background: var(--accent); border: none; color: #fff; font-family: var(--font-display); font-weight: 700; font-size: .82rem; cursor: pointer; transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: .5rem; }
   .btn-refresh:hover { opacity: .85; }
   .btn-refresh:disabled { opacity: .4; cursor: not-allowed; }
 
-  /* CHARTS TOP BAR */
-  .charts-bar {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1px; border-bottom: 1px solid var(--border);
-    background: var(--border);
-  }
-  .chart-panel {
-    background: var(--surface); padding: 1rem 1.25rem;
-    display: flex; flex-direction: column; gap: .6rem;
-  }
+  /* CHARTS */
+  .charts-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border-bottom: 1px solid var(--border); background: var(--border); }
+  .chart-panel { background: var(--surface); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: .6rem; }
 
   /* MAP */
-  #map-container {
-    position: relative; overflow: hidden;
-    background: #050709;
-    min-height: 400px;
-    height: 100%;
-    grid-column: 2;
-    grid-row: 2;
-  }
+  #map-container { position: relative; overflow: hidden; background: #050709; min-height: 400px; height: 100%; grid-column: 2; grid-row: 2; }
   #map { width: 100%; height: 100%; min-height: 400px; }
-  .map-overlay {
-    position: absolute; bottom: 1rem; right: 1rem;
-    background: rgba(17,19,24,.9); border: 1px solid var(--border2);
-    border-radius: 10px; padding: .75rem 1rem;
-    font-family: var(--font-mono); font-size: .68rem;
-    display: flex; flex-direction: column; gap: .35rem; z-index: 400;
-    pointer-events: none;
-  }
+  .map-overlay { position: absolute; bottom: 1rem; right: 1rem; background: rgba(17,19,24,.9); border: 1px solid var(--border2); border-radius: 10px; padding: .75rem 1rem; font-family: var(--font-mono); font-size: .68rem; display: flex; flex-direction: column; gap: .35rem; z-index: 400; pointer-events: none; }
   .legend-row { display: flex; align-items: center; gap: .5rem; color: var(--muted); }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
   /* TABLE */
-  .table-section {
-    background: var(--surface); border-top: 1px solid var(--border);
-    padding: 1rem 1.25rem; overflow-x: auto;
-    grid-column: 2; max-height: 220px; overflow-y: auto;
-  }
+  .table-section { background: var(--surface); border-top: 1px solid var(--border); padding: 1rem 1.25rem; overflow-x: auto; grid-column: 2; max-height: 220px; overflow-y: auto; }
   table { width: 100%; border-collapse: collapse; font-size: .75rem; font-family: var(--font-mono); }
-  th {
-    text-align: left; padding: .4rem .75rem;
-    color: var(--muted); font-size: .65rem; letter-spacing: .07em;
-    border-bottom: 1px solid var(--border); position: sticky; top: 0;
-    background: var(--surface);
-  }
+  th { text-align: left; padding: .4rem .75rem; color: var(--muted); font-size: .65rem; letter-spacing: .07em; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); }
   td { padding: .4rem .75rem; border-bottom: 1px solid var(--border); }
   tr:hover td { background: var(--surface2); }
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 100px;
-    font-size: .65rem; font-weight: 700; letter-spacing: .04em;
-  }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: .65rem; font-weight: 700; letter-spacing: .04em; }
   .badge-critical { background: rgba(255,45,45,.15); color: var(--critical); border: 1px solid rgba(255,45,45,.3); }
   .badge-high     { background: rgba(255,124,0,.15);  color: var(--high);     border: 1px solid rgba(255,124,0,.3); }
   .badge-medium   { background: rgba(245,197,66,.12); color: var(--medium);   border: 1px solid rgba(245,197,66,.3); }
   .badge-low      { background: rgba(74,222,128,.1);  color: var(--low);      border: 1px solid rgba(74,222,128,.25); }
 
-  /* LEAFLET OVERRIDES */
+  /* LEAFLET */
   .leaflet-container { background: #050709 !important; }
   .leaflet-control-zoom a { background: var(--surface2) !important; color: var(--text) !important; border-color: var(--border) !important; }
   .leaflet-popup-content-wrapper { background: var(--surface) !important; color: var(--text) !important; border: 1px solid var(--border2) !important; border-radius: 8px !important; }
@@ -191,17 +179,42 @@
   .popup-row { display: flex; justify-content: space-between; gap: 1rem; font-size: .78rem; font-family: var(--font-mono); color: var(--muted); margin-bottom: .2rem; }
   .popup-row span:last-child { color: var(--text); }
 
-  .loading-overlay {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 9999; gap: 1rem; transition: opacity .4s;
-  }
+  /* ── SECTION 3: PROBLEMA & ODS ── */
+  .problem-section { padding: 5rem 2rem; background: var(--bg); }
+  .problem-inner { max-width: 960px; margin: 0 auto; }
+  .problem-header { text-align: center; margin-bottom: 4rem; }
+  .problem-tag { display: inline-block; font-family: var(--font-mono); font-size: .7rem; color: var(--info); border: 1px solid rgba(56,189,248,.3); border-radius: 100px; padding: .35rem .9rem; margin-bottom: 1.25rem; }
+  .problem-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  .problem-subtitle { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 600px; margin: 0 auto; }
+
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+  @media(max-width:700px){ .problem-grid { grid-template-columns: 1fr; } }
+  .problem-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; }
+  .problem-card-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .problem-card-title { font-size: 1rem; font-weight: 700; margin-bottom: .75rem; }
+  .problem-card-text { font-size: .85rem; color: var(--muted); line-height: 1.7; }
+
+  .ods-block { background: linear-gradient(135deg, rgba(74,222,128,.07), rgba(56,189,248,.05)); border: 1px solid rgba(74,222,128,.2); border-radius: 14px; padding: 2.5rem; margin-bottom: 3rem; }
+  .ods-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .ods-badge { width: 56px; height: 56px; background: var(--low); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: #000; font-family: var(--font-mono); flex-shrink: 0; }
+  .ods-title { font-size: 1.2rem; font-weight: 700; }
+  .ods-subtitle { font-size: .82rem; color: var(--muted); }
+  .ods-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .ods-item { display: flex; gap: .75rem; align-items: flex-start; }
+  .ods-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--low); margin-top: .4rem; flex-shrink: 0; }
+  .ods-item-text { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+
+  .spatial-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
+  .spatial-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: .5rem; }
+  .spatial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+  .spatial-sat { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .spatial-sat-name { font-family: var(--font-mono); font-size: .78rem; font-weight: 700; color: var(--info); margin-bottom: .4rem; }
+  .spatial-sat-desc { font-size: .75rem; color: var(--muted); line-height: 1.5; }
+
+  /* LOADING */
+  .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; gap: 1rem; transition: opacity .4s; }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-  .loader-ring {
-    width: 48px; height: 48px; border: 3px solid var(--border2);
-    border-top-color: var(--accent); border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
+  .loader-ring { width: 48px; height: 48px; border: 3px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loader-text { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
 </style>
@@ -210,170 +223,284 @@
 
 <div class="loading-overlay" id="loading">
   <div class="loader-ring"></div>
-  <div class="loader-text">Conectando Aos Satélites...</div>
+  <div class="loader-text">Carregando Dados...</div>
 </div>
 
+<!-- HEADER -->
 <header>
   <div class="logo">
-    <div class="logo-icon">🔥</div>
+    <div class="logo-icon" style="font-size:13px;font-weight:900;letter-spacing:-1px;color:#fff">FW</div>
     Fire<span>Watch</span> Orbital
   </div>
   <div class="header-right">
-    <div class="source-badge" id="source-badge">carregando...</div>
+    <div class="source-badge" id="source-badge">Carregando...</div>
     <div id="last-updated">—</div>
   </div>
 </header>
 
-<div class="main">
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="scrollToSection('sec-identity', this)">Identidade</button>
+  <button class="tab-btn" onclick="scrollToSection('sec-dashboard', this)">Dashboard</button>
+  <button class="tab-btn" onclick="scrollToSection('sec-problem', this)">Problema & ODS</button>
+</nav>
 
-  <!-- SIDEBAR -->
-  <aside>
-    <div>
-      <div class="section-label">Visão Geral · 5 Dias</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;">
-        <div class="metric-card">
-          <div class="metric-value" id="stat-total">—</div>
-          <div class="metric-label">Focos Totais</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-value critical" id="stat-critical">—</div>
-          <div class="metric-label">Críticos</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-value high" id="stat-high">—</div>
-          <div class="metric-label">Alto Risco</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-value" id="stat-frp" style="font-size:1.4rem">—</div>
-          <div class="metric-label">FRP Médio (MW)</div>
-        </div>
+<!-- ═══════════════════════════════════════════════
+     SEÇÃO 1 — IDENTIDADE DO PRODUTO
+════════════════════════════════════════════════ -->
+<section class="section identity-hero" id="sec-identity">
+  <div class="identity-content">
+    <div class="identity-badge">Dados Orbitais Reais · NASA FIRMS</div>
+    <h1 class="identity-title">Fire<span>Watch</span><br>Orbital</h1>
+    <p class="identity-subtitle">Plataforma de monitoramento de queimadas em tempo real usando dados satelitais da NASA. Acompanhe focos de calor no Brasil com precisão orbital.</p>
+
+    <div class="identity-stats">
+      <div class="identity-stat">
+        <div class="identity-stat-val" id="hero-total">—</div>
+        <div class="identity-stat-label">Focos Detectados</div>
+      </div>
+      <div class="identity-stat">
+        <div class="identity-stat-val" id="hero-critical">—</div>
+        <div class="identity-stat-label">Nível Crítico</div>
+      </div>
+      <div class="identity-stat">
+        <div class="identity-stat-val">4</div>
+        <div class="identity-stat-label">Satélites Ativos</div>
       </div>
     </div>
 
-    <div>
-      <div class="section-label">Distribuição De Alertas</div>
-      <div id="alert-bars"></div>
-    </div>
-
-    <div>
-      <div class="section-label">Filtros</div>
-      <div class="filter-group">
-        <div class="filter-label">Período</div>
-        <select id="filter-days">
-          <option value="1">Último Dia</option>
-          <option value="2">Últimos 2 Dias</option>
-          <option value="3">Últimos 3 Dias</option>
-          <option value="5" selected>Últimos 5 Dias</option>
-        </select>
-      </div>
-      <div class="filter-group" style="margin-top:.75rem">
-        <div class="filter-label">FRP Mínimo (MW): <span id="frp-label">0</span></div>
-        <input type="range" id="filter-frp" min="0" max="500" value="0" step="10"/>
-      </div>
-      <div class="filter-group" style="margin-top:.75rem">
-        <div class="filter-label">Confiança</div>
-        <select id="filter-conf">
-          <option value="">Todas</option>
-          <option value="high">Alta</option>
-          <option value="nominal">Nominal</option>
-          <option value="low">Baixa</option>
-        </select>
+    <div class="team-section">
+      <div class="team-title">Equipe de Desenvolvimento</div>
+      <div class="team-grid">
+        <div class="team-card"><div class="team-avatar" style="font-size:.65rem;font-weight:700;color:var(--muted)">—</div><div><div class="team-name">Lucca Alexandre</div><div class="team-rm">RM99700</div></div></div>
+        <div class="team-card"><div class="team-avatar" style="font-size:.65rem;font-weight:700;color:var(--muted)">—</div><div><div class="team-name">Victor Wittner</div><div class="team-rm">RM98667</div></div></div>
+        <div class="team-card"><div class="team-avatar" style="font-size:.65rem;font-weight:700;color:var(--muted)">—</div><div><div class="team-name">Pedro Guerra</div><div class="team-rm">RM99526</div></div></div>
+        <div class="team-card"><div class="team-avatar" style="font-size:.65rem;font-weight:700;color:var(--muted)">—</div><div><div class="team-name">João Saborido</div><div class="team-rm">RM98184</div></div></div>
+        <div class="team-card"><div class="team-avatar" style="font-size:.65rem;font-weight:700;color:var(--muted)">—</div><div><div class="team-name">Matheus Haruo</div><div class="team-rm">RM97663</div></div></div>
       </div>
     </div>
+  </div>
+</section>
 
-    <button class="btn-refresh" id="btn-refresh" onclick="loadAll()">
-      ↻ Atualizar Dados
-    </button>
+<!-- ═══════════════════════════════════════════════
+     SEÇÃO 2 — DASHBOARD
+════════════════════════════════════════════════ -->
+<section class="section" id="sec-dashboard">
+  <div class="dashboard-section">
 
-    <div style="margin-top:auto;display:flex;flex-direction:column;gap:.75rem">
+    <!-- SIDEBAR -->
+    <aside>
       <div>
-        <div class="section-label">Satélites Ativos</div>
-        <div id="sat-list" style="display:flex;flex-direction:column;gap:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)"></div>
-      </div>
-
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem">
-        <div class="section-label" style="margin-bottom:.5rem">Fonte de Dados</div>
-        <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--muted);line-height:1.6">
-          <div>🛰️ <span style="color:var(--text)">NASA FIRMS</span></div>
-          <div>📡 VIIRS NOAA-20 NRT</div>
-          <div>🌎 Bounding Box Brasil</div>
-          <div>⏱️ Atualização ~3h</div>
+        <div class="section-label">Visão Geral · 5 Dias</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;">
+          <div class="metric-card"><div class="metric-value" id="stat-total">—</div><div class="metric-label">Focos Totais</div></div>
+          <div class="metric-card"><div class="metric-value critical" id="stat-critical">—</div><div class="metric-label">Críticos</div></div>
+          <div class="metric-card"><div class="metric-value high" id="stat-high">—</div><div class="metric-label">Alto Risco</div></div>
+          <div class="metric-card"><div class="metric-value" id="stat-frp" style="font-size:1.4rem">—</div><div class="metric-label">FRP Médio (MW)</div></div>
         </div>
       </div>
 
-      <div style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:.85rem 1rem">
-        <div class="section-label" style="margin-bottom:.4rem;color:#4ade80">ODS 13 · Ação Climática</div>
-        <div style="font-size:.68rem;color:var(--muted);line-height:1.5">
-          Monitoramento orbital de queimadas contribui para redução de emissões de CO₂ e preservação dos biomas brasileiros.
+      <div>
+        <div class="section-label">Distribuição De Alertas</div>
+        <div id="alert-bars"></div>
+      </div>
+
+      <div>
+        <div class="section-label">Filtros</div>
+        <div class="filter-group">
+          <div class="filter-label">Período</div>
+          <select id="filter-days">
+            <option value="1">Último Dia</option>
+            <option value="2">Últimos 2 Dias</option>
+            <option value="3">Últimos 3 Dias</option>
+            <option value="5" selected>Últimos 5 Dias</option>
+          </select>
+        </div>
+        <div class="filter-group" style="margin-top:.75rem">
+          <div class="filter-label">FRP Mínimo (MW): <span id="frp-label">0</span></div>
+          <input type="range" id="filter-frp" min="0" max="500" value="0" step="10"/>
+        </div>
+        <div class="filter-group" style="margin-top:.75rem">
+          <div class="filter-label">Confiança</div>
+          <select id="filter-conf">
+            <option value="">Todas</option>
+            <option value="high">Alta</option>
+            <option value="nominal">Nominal</option>
+            <option value="low">Baixa</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-refresh" id="btn-refresh" onclick="loadAll()">↻ Atualizar Dados</button>
+
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:.75rem">
+        <div>
+          <div class="section-label">Satélites Ativos</div>
+          <div id="sat-list" style="display:flex;flex-direction:column;gap:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)"></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem">
+          <div class="section-label" style="margin-bottom:.5rem">Fonte de Dados</div>
+          <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--muted);line-height:1.6">
+            <div><span style="color:var(--accent);font-weight:700">NASA FIRMS</span></div>
+            <div>VIIRS NOAA-20 NRT</div>
+            <div>Bounding Box Brasil</div>
+            <div>Atualização ~3h</div>
+          </div>
+        </div>
+        <div style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:.85rem 1rem">
+          <div class="section-label" style="margin-bottom:.4rem;color:#4ade80">ODS 13 · Ação Climática</div>
+          <div style="font-size:.68rem;color:var(--muted);line-height:1.5">Monitoramento orbital contribui para redução de emissões de CO₂ e preservação dos biomas brasileiros.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHARTS -->
+    <div class="charts-bar">
+      <div class="chart-panel">
+        <div class="section-label">Focos Por Bioma</div>
+        <div style="position:relative;height:130px;"><canvas id="chart-biome"></canvas></div>
+      </div>
+      <div class="chart-panel">
+        <div class="section-label">Evolução Diária</div>
+        <div style="position:relative;height:130px;"><canvas id="chart-daily"></canvas></div>
+      </div>
+      <div class="chart-panel">
+        <div class="section-label">Top 5 Estados</div>
+        <div style="position:relative;height:130px;"><canvas id="chart-states"></canvas></div>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div id="map-container">
+      <div id="map"></div>
+      <div class="map-overlay">
+        <div class="legend-row"><div class="legend-dot" style="background:var(--critical)"></div>Crítico (FRP ≥ 300)</div>
+        <div class="legend-row"><div class="legend-dot" style="background:var(--high)"></div>Alto (FRP 100–299)</div>
+        <div class="legend-row"><div class="legend-dot" style="background:var(--medium)"></div>Médio (FRP 30–99)</div>
+        <div class="legend-row"><div class="legend-dot" style="background:var(--low)"></div>Baixo (FRP &lt; 30)</div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Data</th><th>Lat</th><th>Lon</th><th>Bioma</th><th>Estado</th><th>FRP (MW)</th><th>Satélite</th><th>Alerta</th></tr>
+        </thead>
+        <tbody id="fire-table"></tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SEÇÃO 3 — PROBLEMA & ODS
+════════════════════════════════════════════════ -->
+<section class="section problem-section" id="sec-problem">
+  <div class="problem-inner">
+
+    <div class="problem-header">
+      <div class="problem-tag">Problema Espacial &amp; Impacto Real</div>
+      <h2 class="problem-title">Por que monitorar<br>queimadas do espaço?</h2>
+      <p class="problem-subtitle">O Brasil perde milhões de hectares por ano para queimadas. Satélites em órbita são a única forma de monitorar esse fenômeno em escala nacional, em tempo real.</p>
+    </div>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div style="width:32px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:1rem"></div>
+        <div class="problem-card-title">O Problema</div>
+        <div class="problem-card-text">O Brasil é um dos países com maior incidência de queimadas no mundo. Anualmente, focos de incêndio devastam a Amazônia, o Cerrado e o Pantanal, causando impactos ambientais severos, comprometendo a qualidade do ar e acelerando as mudanças climáticas globais.</div>
+      </div>
+      <div class="problem-card">
+        <div style="width:32px;height:3px;background:var(--info);border-radius:2px;margin-bottom:1rem"></div>
+        <div class="problem-card-title">A Solução Espacial</div>
+        <div class="problem-card-text">Satélites em órbita polar cobrem o território brasileiro múltiplas vezes ao dia, detectando focos de calor com sensores infravermelhos de alta precisão. O FireWatch Orbital integra esses dados diretamente da NASA FIRMS, tornando a informação acessível em uma interface moderna.</div>
+      </div>
+      <div class="problem-card">
+        <div style="width:32px;height:3px;background:var(--medium);border-radius:2px;margin-bottom:1rem"></div>
+        <div class="problem-card-title">A Lacuna Atual</div>
+        <div class="problem-card-text">Apesar dos dados existirem, eles estão dispersos em APIs científicas de difícil acesso. Órgãos ambientais, pesquisadores e a sociedade civil não têm ferramentas intuitivas para consumir essas informações em tempo real e tomar decisões baseadas em dados.</div>
+      </div>
+      <div class="problem-card">
+        <div style="width:32px;height:3px;background:var(--low);border-radius:2px;margin-bottom:1rem"></div>
+        <div class="problem-card-title">O Que Entregamos</div>
+        <div class="problem-card-text">Uma plataforma web completa que consome dados orbitais reais, classifica focos por nível de risco, infere estado e bioma por coordenada geográfica, e apresenta tudo em um dashboard interativo com mapa, gráficos e alertas em tempo quase real.</div>
+      </div>
+    </div>
+
+    <div class="ods-block">
+      <div class="ods-header">
+        <div class="ods-badge">13</div>
+        <div>
+          <div class="ods-title">ODS 13 — Ação Climática</div>
+          <div class="ods-subtitle">Objetivo de Desenvolvimento Sustentável da ONU</div>
+        </div>
+      </div>
+      <div class="ods-items">
+        <div class="ods-item"><div class="ods-dot"></div><div class="ods-item-text">Monitoramento de emissões de CO₂ causadas por queimadas, responsáveis por ~20% das emissões globais</div></div>
+        <div class="ods-item"><div class="ods-dot"></div><div class="ods-item-text">Apoio a políticas de preservação dos biomas brasileiros com dados precisos e em tempo real</div></div>
+        <div class="ods-item"><div class="ods-dot"></div><div class="ods-item-text">Suporte a alertas precoces para defesa civil em regiões remotas sem infraestrutura de monitoramento</div></div>
+        <div class="ods-item"><div class="ods-dot"></div><div class="ods-item-text">Transparência para ONGs, jornalistas e pesquisadores acompanharem o desmatamento em escala nacional</div></div>
+      </div>
+    </div>
+
+    <div class="spatial-block">
+      <div class="spatial-title">Satélites Que Alimentam o FireWatch Orbital</div>
+      <div class="spatial-grid">
+        <div class="spatial-sat">
+          <div class="spatial-sat-name">NOAA-20 (VIIRS)</div>
+          <div class="spatial-sat-desc">Fonte principal dos dados. Sensor de alta resolução em órbita polar, com cobertura global diária e atualização em tempo quase real via NASA FIRMS.</div>
+        </div>
+        <div class="spatial-sat">
+          <div class="spatial-sat-name">Terra (MODIS)</div>
+          <div class="spatial-sat-desc">Satélite da NASA em órbita polar que passa sobre o Brasil duas vezes ao dia, coletando dados de temperatura superficial e focos de calor.</div>
+        </div>
+        <div class="spatial-sat">
+          <div class="spatial-sat-name">Aqua (MODIS)</div>
+          <div class="spatial-sat-desc">Par complementar ao Terra, passa em horários diferentes maximizando a cobertura temporal e reduzindo lacunas na detecção de focos.</div>
+        </div>
+        <div class="spatial-sat">
+          <div class="spatial-sat-name">SNPP (VIIRS)</div>
+          <div class="spatial-sat-desc">Predecessor do NOAA-20, ainda operacional e contribuindo com dados redundantes para maior confiabilidade do monitoramento.</div>
         </div>
       </div>
     </div>
-  </aside>
 
-  <!-- CHARTS BAR -->
-  <div class="charts-bar">
-    <div class="chart-panel">
-      <div class="section-label">Focos Por Bioma</div>
-      <div style="position:relative;height:130px;">
-        <canvas id="chart-biome" role="img" aria-label="Focos de incêndio por bioma"></canvas>
-      </div>
-    </div>
-    <div class="chart-panel">
-      <div class="section-label">Evolução Diária</div>
-      <div style="position:relative;height:130px;">
-        <canvas id="chart-daily" role="img" aria-label="Evolução diária de focos"></canvas>
-      </div>
-    </div>
-    <div class="chart-panel">
-      <div class="section-label">Top 5 Estados</div>
-      <div style="position:relative;height:130px;">
-        <canvas id="chart-states" role="img" aria-label="Estados com mais focos"></canvas>
-      </div>
-    </div>
   </div>
-
-  <!-- MAP -->
-  <div id="map-container">
-    <div id="map"></div>
-    <div class="map-overlay">
-      <div class="legend-row"><div class="legend-dot" style="background:var(--critical)"></div>Crítico (FRP ≥ 300)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:var(--high)"></div>Alto (FRP 100–299)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:var(--medium)"></div>Médio (FRP 30–99)</div>
-      <div class="legend-row"><div class="legend-dot" style="background:var(--low)"></div>Baixo (FRP < 30)</div>
-    </div>
-  </div>
-
-  <!-- TABLE -->
-  <div class="table-section">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Data</th><th>Lat</th><th>Lon</th>
-          <th>Bioma</th><th>Estado</th><th>FRP (MW)</th>
-          <th>Satélite</th><th>Alerta</th>
-        </tr>
-      </thead>
-      <tbody id="fire-table"></tbody>
-    </table>
-  </div>
-
-</div>
+</section>
 
 <script>
 const API = '';
 let map, markersLayer, chartBiome, chartDaily, chartStates;
 let allFires = [];
 
-const ALERT_COLORS = {
-  critical: '#ff2d2d', high: '#ff7c00', medium: '#f5c542', low: '#4ade80'
-};
+const ALERT_COLORS = { critical: '#ff2d2d', high: '#ff7c00', medium: '#f5c542', low: '#4ade80' };
 const ALERT_LABELS = { critical: 'Crítico', high: 'Alto', medium: 'Médio', low: 'Baixo' };
 
+// ── TAB NAVIGATION ──────────────────────────────────────────────────────────
+function scrollToSection(id, btn) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// Atualizar aba ativa ao scrollar
+const sections = ['sec-identity', 'sec-dashboard', 'sec-problem'];
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = sections.indexOf(entry.target.id);
+      document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+
+// ── MAP ──────────────────────────────────────────────────────────────────────
 function initMap() {
   map = L.map('map', { zoomControl: true, attributionControl: false }).setView([-15, -55], 4);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 18
-  }).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(map);
   markersLayer = L.layerGroup().addTo(map);
 }
 
@@ -382,12 +509,9 @@ function plotFires(fires) {
   fires.forEach(f => {
     const color = ALERT_COLORS[f.alert_level] || '#fff';
     const radius = Math.min(4 + f.frp / 80, 14);
-    const marker = L.circleMarker([f.latitude, f.longitude], {
-      radius, color, fillColor: color,
-      fillOpacity: 0.75, weight: 0.5, opacity: 0.9
-    });
+    const marker = L.circleMarker([f.latitude, f.longitude], { radius, color, fillColor: color, fillOpacity: 0.75, weight: 0.5, opacity: 0.9 });
     marker.bindPopup(`
-      <div class="popup-title">🔥 Foco de Incêndio</div>
+      <div class="popup-title">Foco de Incêndio</div>
       <div class="popup-row"><span>Data</span><span>${f.acq_date} ${f.acq_time}</span></div>
       <div class="popup-row"><span>Coordenadas</span><span>${f.latitude}, ${f.longitude}</span></div>
       <div class="popup-row"><span>FRP</span><span>${f.frp.toFixed(1)} MW</span></div>
@@ -401,119 +525,65 @@ function plotFires(fires) {
   });
 }
 
+// ── CHARTS ───────────────────────────────────────────────────────────────────
 function buildCharts(stats) {
   const textColor = '#6b7280';
   const gridColor = 'rgba(255,255,255,0.05)';
-  const baseOpts = {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-  };
+  const baseOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
 
-  // Biome chart
   if (chartBiome) chartBiome.destroy();
   const biomeKeys = Object.keys(stats.by_biome).filter(k => k !== 'N/A');
-  const biomeVals = biomeKeys.map(k => stats.by_biome[k]);
   chartBiome = new Chart(document.getElementById('chart-biome'), {
     type: 'doughnut',
-    data: {
-      labels: biomeKeys,
-      datasets: [{
-        data: biomeVals,
-        backgroundColor: ['#ff4d1c','#ff8c42','#f5c542','#4ade80','#38bdf8','#a78bfa'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      ...baseOpts,
-      plugins: {
-        legend: { display: true, position: 'right', labels: { color: textColor, font: { size: 10, family: 'Space Mono' }, boxWidth: 10, padding: 6 } }
-      },
-      cutout: '60%',
-    }
+    data: { labels: biomeKeys, datasets: [{ data: biomeKeys.map(k => stats.by_biome[k]), backgroundColor: ['#ff4d1c','#ff8c42','#f5c542','#4ade80','#38bdf8','#a78bfa'], borderWidth: 0 }] },
+    options: { ...baseOpts, plugins: { legend: { display: true, position: 'right', labels: { color: textColor, font: { size: 10, family: 'Space Mono' }, boxWidth: 10, padding: 6 } } }, cutout: '60%' }
   });
 
-  // Daily chart
   if (chartDaily) chartDaily.destroy();
   const dayKeys = Object.keys(stats.by_day).slice(-7);
-  const dayVals = dayKeys.map(k => stats.by_day[k]);
   chartDaily = new Chart(document.getElementById('chart-daily'), {
     type: 'line',
-    data: {
-      labels: dayKeys.map(d => d.slice(5)),
-      datasets: [{
-        data: dayVals, borderColor: '#ff4d1c', backgroundColor: 'rgba(255,77,28,0.1)',
-        borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#ff4d1c'
-      }]
-    },
-    options: {
-      ...baseOpts,
-      scales: {
-        x: { ticks: { color: textColor, font: { size: 9, family: 'Space Mono' } }, grid: { color: gridColor } },
-        y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } }
-      }
-    }
+    data: { labels: dayKeys.map(d => d.slice(5)), datasets: [{ data: dayKeys.map(k => stats.by_day[k]), borderColor: '#ff4d1c', backgroundColor: 'rgba(255,77,28,0.1)', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#ff4d1c' }] },
+    options: { ...baseOpts, scales: { x: { ticks: { color: textColor, font: { size: 9, family: 'Space Mono' } }, grid: { color: gridColor } }, y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } } } }
   });
 
-  // States chart
   if (chartStates) chartStates.destroy();
   const stateEntries = Object.entries(stats.top_states).slice(0, 5);
-  const stateKeys = stateEntries.map(([k]) => k);
-  const stateVals = stateEntries.map(([, v]) => v);
   chartStates = new Chart(document.getElementById('chart-states'), {
     type: 'bar',
-    data: {
-      labels: stateKeys,
-      datasets: [{
-        data: stateVals,
-        backgroundColor: 'rgba(255,77,28,0.7)',
-        borderRadius: 4,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      ...baseOpts,
-      scales: {
-        x: { ticks: { color: textColor, font: { size: 10, family: 'Space Mono' } }, grid: { display: false } },
-        y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } }
-      }
-    }
+    data: { labels: stateEntries.map(([k]) => k), datasets: [{ data: stateEntries.map(([,v]) => v), backgroundColor: 'rgba(255,77,28,0.7)', borderRadius: 4, borderSkipped: false }] },
+    options: { ...baseOpts, scales: { x: { ticks: { color: textColor, font: { size: 10, family: 'Space Mono' } }, grid: { display: false } }, y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } } } }
   });
 }
 
+// ── SIDEBAR ──────────────────────────────────────────────────────────────────
 function updateSidebar(stats) {
   document.getElementById('stat-total').textContent = stats.total_fires.toLocaleString('pt-BR');
   document.getElementById('stat-critical').textContent = stats.critical_count;
   document.getElementById('stat-high').textContent = stats.high_count;
   document.getElementById('stat-frp').textContent = stats.avg_frp.toFixed(1);
+  document.getElementById('hero-total').textContent = stats.total_fires.toLocaleString('pt-BR');
+  document.getElementById('hero-critical').textContent = stats.critical_count;
 
   const total = stats.total_fires || 1;
-  const alertBarsEl = document.getElementById('alert-bars');
-  alertBarsEl.innerHTML = ['critical','high','medium','low'].map(level => {
+  document.getElementById('alert-bars').innerHTML = ['critical','high','medium','low'].map(level => {
     const count = stats.by_alert[level] || 0;
     const pct = Math.round((count / total) * 100);
-    return `
-      <div class="alert-bar">
-        <div class="alert-bar-label">
-          <span style="color:${ALERT_COLORS[level]}">${ALERT_LABELS[level]}</span>
-          <span style="font-family:var(--font-mono);font-size:.68rem">${count}</span>
-        </div>
-        <div class="alert-bar-track">
-          <div class="alert-bar-fill" style="width:${pct}%;background:${ALERT_COLORS[level]}"></div>
-        </div>
-      </div>`;
+    return `<div class="alert-bar">
+      <div class="alert-bar-label"><span style="color:${ALERT_COLORS[level]}">${ALERT_LABELS[level]}</span><span style="font-family:var(--font-mono);font-size:.68rem">${count}</span></div>
+      <div class="alert-bar-track"><div class="alert-bar-fill" style="width:${pct}%;background:${ALERT_COLORS[level]}"></div></div>
+    </div>`;
   }).join('');
 
-  const satEl = document.getElementById('sat-list');
-  satEl.innerHTML = Object.entries(stats.by_satellite)
+  document.getElementById('sat-list').innerHTML = Object.entries(stats.by_satellite)
     .sort((a,b) => b[1]-a[1])
     .map(([sat, cnt]) => `<div style="display:flex;justify-content:space-between"><span>${sat}</span><span style="color:var(--info)">${cnt}</span></div>`)
     .join('');
 }
 
+// ── TABLE ────────────────────────────────────────────────────────────────────
 function updateTable(fires) {
-  const tbody = document.getElementById('fire-table');
-  const top = fires.slice().sort((a,b) => b.frp - a.frp).slice(0, 100);
-  tbody.innerHTML = top.map((f, i) => `
+  document.getElementById('fire-table').innerHTML = fires.slice().sort((a,b) => b.frp - a.frp).slice(0, 100).map((f, i) => `
     <tr>
       <td style="color:var(--muted)">${i+1}</td>
       <td>${f.acq_date}</td>
@@ -524,25 +594,22 @@ function updateTable(fires) {
       <td style="color:${ALERT_COLORS[f.alert_level]}">${f.frp.toFixed(1)}</td>
       <td>${f.satellite}</td>
       <td><span class="badge badge-${f.alert_level}">${ALERT_LABELS[f.alert_level]}</span></td>
-    </tr>
-  `).join('');
+    </tr>`).join('');
 }
 
-function updateHeader(stats, firesData) {
-  const sourceEl = document.getElementById('source-badge');
+// ── HEADER ───────────────────────────────────────────────────────────────────
+function updateHeader(stats) {
   const isLive = stats.data_source === 'nasa_firms';
+  const sourceEl = document.getElementById('source-badge');
   sourceEl.className = 'source-badge' + (isLive ? ' live' : '');
-  sourceEl.innerHTML = isLive
-    ? `<span class="pulse"></span>NASA FIRMS · AO VIVO`
-    : `Dados Sintéticos · DEMO`;
+  sourceEl.innerHTML = isLive ? `<span class="pulse"></span>NASA FIRMS · Ao Vivo` : `Dados Sintéticos · Demo`;
   const raw = stats.updated_at.replace('+00:00', 'Z').replace(/\+\d{2}:\d{2}$/, 'Z');
   const d = new Date(raw);
-  const timeStr = isNaN(d.getTime())
-    ? stats.updated_at.slice(11, 19)
-    : d.toLocaleTimeString('pt-BR');
-  document.getElementById('last-updated').textContent = `Atualizado ${timeStr}`;
+  const timeStr = isNaN(d.getTime()) ? stats.updated_at.slice(11, 19) : d.toLocaleTimeString('pt-BR');
+  document.getElementById('last-updated').textContent = `Atualizado: ${timeStr}`;
 }
 
+// ── FILTERS ──────────────────────────────────────────────────────────────────
 function applyFilters() {
   const minFrp = parseFloat(document.getElementById('filter-frp').value) || 0;
   const conf = document.getElementById('filter-conf').value;
@@ -553,34 +620,29 @@ function applyFilters() {
   });
 }
 
+// ── LOAD ─────────────────────────────────────────────────────────────────────
 async function loadAll() {
   const btn = document.getElementById('btn-refresh');
   btn.disabled = true;
-  btn.textContent = '↻ carregando...';
-
+  btn.textContent = '↻ Carregando...';
   const days = document.getElementById('filter-days').value;
   const conf = document.getElementById('filter-conf').value;
   const minFrp = document.getElementById('filter-frp').value;
-
   try {
     let firesUrl = `${API}/api/fires?days=${days}`;
     if (conf) firesUrl += `&confidence=${conf}`;
     if (minFrp > 0) firesUrl += `&min_frp=${minFrp}`;
-
     const [firesRes, statsRes] = await Promise.all([
       fetch(firesUrl).then(r => r.json()),
       fetch(`${API}/api/stats`).then(r => r.json()),
     ]);
-
     allFires = firesRes.fires || [];
     const filtered = applyFilters();
-
     plotFires(filtered);
     buildCharts(statsRes);
     updateSidebar(statsRes);
     updateTable(filtered);
-    updateHeader(statsRes, firesRes);
-
+    updateHeader(statsRes);
   } catch(err) {
     console.error('Erro ao carregar dados:', err);
   } finally {
@@ -590,14 +652,13 @@ async function loadAll() {
   }
 }
 
-// Init
+// ── EVENTS ───────────────────────────────────────────────────────────────────
 document.getElementById('filter-frp').addEventListener('input', function() {
   document.getElementById('frp-label').textContent = this.value;
   const filtered = applyFilters();
   plotFires(filtered);
   updateTable(filtered);
 });
-
 document.getElementById('filter-days').addEventListener('change', loadAll);
 document.getElementById('filter-conf').addEventListener('change', () => {
   const filtered = applyFilters();
@@ -605,8 +666,8 @@ document.getElementById('filter-conf').addEventListener('change', () => {
   updateTable(filtered);
 });
 
+// ── INIT ─────────────────────────────────────────────────────────────────────
 initMap();
-// Força o Leaflet a recalcular o tamanho do container após o DOM estar totalmente renderizado
 setTimeout(() => { map.invalidateSize(); map.setView([-15, -55], 4); }, 300);
 loadAll();
 </script>
