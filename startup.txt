@@ -1,5 +1,0 @@
-# Comando para iniciar a aplicação em produção
-uvicorn main:app --host 0.0.0.0 --port 8000
-
-# Alternativa com Gunicorn (múltiplos workers)
-# gunicorn --bind=0.0.0.0:8000 --timeout 600 --worker-class uvicorn.workers.UvicornWorker main:app --workers 4
